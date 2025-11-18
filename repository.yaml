@@ -3,5 +3,4 @@ maintainer: "Triplid"
 description: "Custom add-ons for miniDSP 2x4 HD USB control (v3)"
 url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
 addons:
-  minidsp_2x4hd_usb:
-    name: "MiniDSP 2x4 HD USB (Presets & Source)"
+  - minidsp_2x4hd_usb
