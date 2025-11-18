@@ -1,6 +1,8 @@
 name: "Custom MiniDSP Add-ons"
-maintainer: "Triplid <your-email@example.com>"  # Замени на свой email или ник
+maintainer: "Triplid <your-email>"
 description: "Custom add-ons for miniDSP 2x4 HD USB control"
 url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
+
 addons:
-  - minidsp_2x4hd_usb  # Slug твоего аддона (из config.yaml)
+  minidsp_2x4hd_usb:
+    name: "MiniDSP 2x4 HD USB (Presets & Source)"
