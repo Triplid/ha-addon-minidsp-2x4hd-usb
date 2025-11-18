@@ -1,0 +1,17 @@
+{
+  "name": "MiniDSP 2x4HD USB",
+  "version": "1.0.0",
+  "slug": "minidsp_2x4hd_usb",
+  "description": "Add-on для управления MiniDSP 2x4HD по USB",
+  "arch": ["aarch64", "amd64", "armv7", "armhf"],
+  "startup": "services",
+  "boot": "auto",
+  "host_network": true,
+  "options": {},
+  "schema": {},
+  "map": ["config:rw"],
+  "ports": {
+    "5000/tcp": 5000
+  },
+  "webui": "http://[HOST]:[PORT:5000]"
+}
