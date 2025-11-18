@@ -1,5 +1,5 @@
-# Базовый образ Home Assistant для aarch64
-FROM ghcr.io/home-assistant/aarch64-base:latest
+ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:latest
+FROM ${BUILD_FROM}
 
 # Установка зависимостей
 RUN apk add --no-cache \
@@ -16,9 +16,10 @@ RUN apk add --no-cache \
 COPY run.sh /usr/src/app/run.sh
 RUN chmod a+x /usr/src/app/run.sh
 
-# Установка Python библиотеки hidapi в виртуальной среде
+# Установка hidapi в виртуальной среде
 RUN python3 -m venv /usr/src/app/venv && \
     /usr/src/app/venv/bin/pip install --no-cache-dir hidapi
 
-# CMD обязательно /init для s6-overlay
-CMD ["/init"]
+# Устанавливаем s6-overlay как PID 1
+# В HA add-on CMD должен быть только /init
+CMD [ "/init" ]
