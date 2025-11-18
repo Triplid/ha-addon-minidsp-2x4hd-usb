@@ -1,27 +1,28 @@
-name: "MiniDSP 2x4 HD USB (Presets & Source)"
-description: "USB control for miniDSP 2x4 HD: read presets and source via HID"
-version: "1.0.0"
-slug: minidsp_2x4hd_usb
-url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
+ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base-debian:bookworm
+FROM $BUILD_FROM
 
-arch:
-  - aarch64
-  - armv7
-  - amd64
+ENV LANG C.UTF-8
 
-startup: application
-boot: auto
+# Устанавливаем зависимости
+RUN apt-get update && \
+    apt-get install -y \
+        python3 \
+        python3-pip \
+        python3-venv \
+        libhidapi-libusb0 \
+        libglib2.0-0 && \
+    rm -rf /var/lib/apt/lists/*
 
-map:
-  - share:rw
+# Создаём venv
+RUN python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
 
-devices:
-  - /dev/hidraw*
-  - /dev/bus/usb
+# Ставим pyhidapi
+RUN pip3 install --no-cache-dir hid==1.0.6
 
-privileged:
-  - SYS_RAWIO
-  - SYS_ADMIN
+COPY minidsp_status.py /app/
+COPY services.d/ /etc/services.d/
 
-homeassistant_api: true
-schema: {}
+WORKDIR /app
+
+CMD [ "/init" ]
