@@ -1,32 +1,34 @@
-# Используем официальный базовый образ HA (не hassio-addons/base — он для x86/amd64)
 ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:3.22
 FROM ${BUILD_FROM} AS builder
 
-# Устанавливаем только то, что реально есть в Alpine aarch64
+# Build-deps: hidapi-dev для компиляции (если нужно), но pip hidapi берёт из source
 RUN apk add --no-cache --virtual .build-deps \
     gcc \
     musl-dev \
     linux-headers \
     python3-dev \
     py3-pip \
-    libusb-dev
+    hidapi-dev  # Правильный dev-пакет для aarch64
 
-# Создаём venv и ставим hidapi (он соберётся из исходников, т.к. wheels нет под aarch64)
+# Venv + pip (upgrade pip для стабильности)
 RUN python3 -m venv /venv && \
-    /venv/bin/pip install --no-cache-dir --upgrade pip && \
-    /venv/bin/pip install --no-cache-dir hidapi
+    . /venv/bin/activate && \
+    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir hidapi  # Соберётся из source с dev-пакетом
 
-# Финальный образ — чистый
+# Финальный образ
 FROM ${BUILD_FROM}
 
-# Runtime-зависимости (только libusb — hidapi тянет его сам)
-RUN apk add --no-cache python3 libusb
+# Runtime: hidapi и libusb (из apk, не dev)
+RUN apk add --no-cache \
+    python3 \
+    hidapi \  # Основной пакет для HID
+    libusb
 
-# Копируем готовый venv
+# Копируем venv
 COPY --from=builder /venv /venv
 ENV PATH="/venv/bin:$PATH"
 
-# Копируем скрипты
 WORKDIR /app
 COPY run.sh minidsp_status.py ./
 RUN chmod +x run.sh minidsp_status.py
