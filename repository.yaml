@@ -1,6 +1,6 @@
 name: "Custom MiniDSP Add-ons"
 maintainer: "Triplid <your-email>"
-description: "Custom add-ons for miniDSP 2x4 HD USB control"
+"Custom add-ons for miniDSP 2x4 HD USB control v9"   ← добавил v9
 url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
 
 addons:
