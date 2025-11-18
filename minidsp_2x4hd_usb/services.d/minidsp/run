@@ -1,6 +1,5 @@
 #!/usr/bin/with-contenv bash
-# Активируем виртуальное окружение
-. /usr/src/app/venv/bin/activate
+# Скрипт запускается под s6-overlay
 
-# Запускаем основной скрипт
-exec python3 /usr/src/app/minidsp_status.py
+# Путь к Python скрипту
+python3 /app/minidsp_status.py
