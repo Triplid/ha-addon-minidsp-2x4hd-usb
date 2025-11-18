@@ -1,0 +1,16 @@
+name: "MiniDSP 2x4 HD USB (Presets & Source)"
+version: "1.0.0"
+slug: minidsp_2x4hd_usb
+description: "USB control for miniDSP 2x4 HD: presets and source only"
+url: "https://github.com/markubiak/python3-minidsp"
+arch:
+  - armv7l  # Для HA Green (ARM)
+  - aarch64
+  - amd64
+startup: application
+boot: auto
+map:
+  - share:rw
+devices:
+  - /dev/hidraw*:/dev/hidraw*:rwm
+  - /dev/bus/usb:/dev/bus/usb:rwm
