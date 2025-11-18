@@ -1,23 +1,29 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:latest
-FROM ${BUILD_FROM}
+# Используем базовый образ Home Assistant для aarch64
+FROM ghcr.io/home-assistant/aarch64-base:latest
 
-# Задаём рабочую директорию
+# Рабочая директория
 WORKDIR /app
 
-# Устанавливаем зависимости
-RUN apk add --no-cache python3 py3-pip libusb eudev \
-    && apk add --no-cache --virtual .build-deps gcc musl-dev linux-headers \
-    && pip install --no-cache-dir hidapi \
-    && apk del .build-deps
+# Устанавливаем системные зависимости
+RUN apk add --no-cache python3 py3-virtualenv libusb eudev \
+    && apk add --no-cache --virtual .build-deps gcc musl-dev linux-headers
 
-# Копируем Python скрипт
-COPY minidsp_status.py /app/minidsp_status.py
+# Создаем виртуальное окружение и ставим Python пакеты
+RUN python3 -m venv /venv \
+    && /venv/bin/pip install --upgrade pip \
+    && /venv/bin/pip install hidapi
 
-# Копируем s6 сервис
-COPY services.d/ /etc/services.d/
+# Убираем сборочные зависимости
+RUN apk del .build-deps
 
-# Делаем run исполняемым
-RUN chmod +x /etc/services.d/minidsp/run
+# Добавляем скрипты addon
+COPY minidsp_2x4hd_usb/ /app/
 
-# s6-overlay автоматически стартует через PID 1
-CMD ["/init"]
+# Делаем run скрипт исполняемым (на случай, если права слетят)
+RUN chmod +x /app/services.d/minidsp/run
+
+# Устанавливаем путь к виртуальному окружению в PATH
+ENV PATH="/venv/bin:$PATH"
+
+# Стандартная точка входа
+CMD ["/app/services.d/minidsp/run"]
