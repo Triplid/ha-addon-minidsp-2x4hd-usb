@@ -1,15 +1,34 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:3.22
+# Базовый образ Home Assistant для aarch64
+ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:latest
 FROM ${BUILD_FROM}
 
-# Runtime пакеты (hidapi из apk для aarch64)
+# Метаданные
+ARG BUILD_DATE
+ARG BUILD_VERSION
+LABEL maintainer="Твой Email или GitHub" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.version=$BUILD_VERSION \
+      org.label-schema.vcs-url="https://github.com/твой_репозиторий" \
+      org.label-schema.vcs-ref=$BUILD_VERSION \
+      org.label-schema.license="MIT" \
+      org.label-schema.name="MiniDSP 2x4HD USB"
+
+# Установка зависимостей Python и USB
 RUN apk add --no-cache \
     python3 \
-    hidapi \
-    libusb
+    py3-hidapi \
+    libusb \
+    eudev
 
-# Рабочая директория
-WORKDIR /app
-COPY run.sh minidsp_status.py ./
-RUN chmod +x run.sh minidsp_status.py
+# Копируем файлы аддона
+WORKDIR /usr/src/app
+COPY run.sh .
 
-CMD ["./run.sh"]
+# Скрипт запуска делаем исполняемым
+RUN chmod a+x run.sh
+
+# Порт (если нужен)
+EXPOSE 5000
+
+# Точка входа
+CMD [ "/usr/src/app/run.sh" ]
