@@ -1,3 +1,4 @@
 #!/usr/bin/with-contenv bash
-# Используем python напрямую из venv, без активации
+
+# Запуск основного скрипта
 exec /venv/bin/python /app/minidsp_status.py
