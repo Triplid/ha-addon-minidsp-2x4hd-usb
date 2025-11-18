@@ -10,7 +10,6 @@ RUN apk add --no-cache \
     linux-headers
 
 RUN pip install --no-cache-dir cython hidapi
-RUN pip install --no-cache-dir git+https://github.com/markubiak/python3-minidsp.git
 
 WORKDIR /app
 COPY run.sh minidsp_status.py ./
