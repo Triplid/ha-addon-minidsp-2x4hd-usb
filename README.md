@@ -1,11 +1,17 @@
 # HA Add-on: MiniDSP 2x4 HD USB
 
-## Installation
-1. Add repo to HA: Settings > Add-ons > Store > Repositories > https://github.com/ТВОЙ_ЛОГИН/ha-addon-minidsp-2x4hd
-2. Install "MiniDSP 2x4 HD USB (Presets & Source)".
-3. Start add-on.
+Custom add-on for controlling miniDSP 2x4 HD via USB (presets and source only).
 
-## configuration.yaml
+## Installation
+1. Add this repo to HA Add-on Store: Settings > Add-ons > Store > Repositories > https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb
+2. Install "MiniDSP 2x4 HD USB (Presets & Source)".
+3. Start the add-on.
+
+## Usage
+- Outputs `/share/minidsp_status.json` with `{"preset": 2, "source": "analog"}` every 10s.
+- Add sensors to `configuration.yaml` (see below).
+
+## configuration.yaml example
 ```yaml
 sensor:
   - platform: file
