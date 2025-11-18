@@ -1,6 +1,4 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:3.16
-
-# Builder stage — собираем Python hidapi
+ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:latest
 FROM ${BUILD_FROM} AS builder
 
 RUN apk add --no-cache --virtual .build-deps \
@@ -14,7 +12,6 @@ RUN apk add --no-cache --virtual .build-deps \
 
 RUN pip install --no-cache-dir cython hidapi
 
-# Final stage — минимальный контейнер
 FROM ${BUILD_FROM}
 
 RUN apk add --no-cache \
