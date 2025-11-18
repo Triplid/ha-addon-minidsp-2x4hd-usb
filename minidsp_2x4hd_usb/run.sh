@@ -6,4 +6,4 @@
 
 # Здесь запускаем твою программу Python
 # Например:
-python3 /usr/src/app/minidsp_main.py
+python3 /usr/src/app/minidsp_status.py
