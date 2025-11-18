@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # Скрипт запуска add-on
-echo "Запуск MiniDSP 2x4HD USB Add-on..."
-# Здесь ваша логика работы с hidapi
-python3 -u main.py
+
+# Активируем виртуальную среду с hidapi
+. /usr/src/app/venv/bin/activate
+
+# Здесь запускаем твою программу Python
+# Например:
+python3 /usr/src/app/minidsp_main.py
