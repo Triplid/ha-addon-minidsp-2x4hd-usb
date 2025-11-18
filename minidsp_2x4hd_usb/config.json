@@ -1,0 +1,13 @@
+{
+  "name": "MiniDSP 2x4HD USB",
+  "version": "1.0.0",
+  "slug": "minidsp_2x4hd_usb",
+  "description": "MiniDSP USB control for presets",
+  "startup": "services",
+  "boot": "auto",
+  "options": {},
+  "schema": {},
+  "arch": ["aarch64", "armv7", "amd64"],
+  "map": ["share:rw"],
+  "host_network": false
+}
