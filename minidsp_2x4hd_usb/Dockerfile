@@ -1,23 +1,18 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/base:3.16
 FROM ${BUILD_FROM}
 
-# Установка зависимостей для Python и HID
+# Только runtime-зависимости (без build-tools)
 RUN apk add --no-cache \
     python3 \
     py3-pip \
     libusb-dev \
-    libhidapi-dev \
-    gcc \
-    musl-dev \
-    linux-headers
+    libhidapi-dev  # Для HID runtime
 
-# Установка Python пакетов
-RUN pip install --no-cache-dir cython hidapi
+# Установка без компиляции (wheels only)
+RUN pip install --no-cache-dir --only-binary=all hidapi cython
 
-# Рабочая директория
 WORKDIR /app
 COPY run.sh minidsp_status.py ./
 RUN chmod +x run.sh minidsp_status.py
 
-# Запуск
 CMD ["./run.sh"]
