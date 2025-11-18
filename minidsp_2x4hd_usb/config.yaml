@@ -1,7 +1,7 @@
-name: "MiniDSP 2x4 HD USB (Presets & Source)"
-slug: minidsp_2x4hd_usb
-description: "USB control for miniDSP 2x4 HD: read presets and source via HID"
-version: "1.0.0"
+name: "MiniDSP 2x4 HD USB Control"
+description: "Читает текущий пресет и источник по USB HID + позволяет переключать (presets & source)"
+version: "1.1.0"
+slug: "minidsp_2x4hd_usb"
 url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
 arch:
   - aarch64
@@ -9,12 +9,17 @@ arch:
   - amd64
 startup: application
 boot: auto
+init: false
+homeassistant_api: true
+auth_api: true
+hassio_api: true
+devices:
+  - /dev/hidraw0:/dev/hidraw0:rwm
+  - /dev/hidraw1:/dev/hidraw1:rwm
+  - /dev/hidraw2:/dev/hidraw2:rwm
+  - /dev/hidraw3:/dev/hidraw3:rwm
+apparmor_profile: unconfined
 map:
   - share:rw
-devices:
-  - /dev/hidraw*:/dev/hidraw*:rwm
-  - /dev/bus/usb:/dev/bus/usb:rwm
-privileged:
-  - true
-homeassistant_api: true
+options: {}
 schema: {}
