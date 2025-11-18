@@ -5,7 +5,7 @@ slug: minidsp_2x4hd_usb
 url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
 arch:
   - aarch64  # Основной для HA Green (ARM64)
-  - armv7l   # Дополнительно для старых ARM
+  - armv7   # Дополнительно для старых ARM
   - amd64    # Для x86
 startup: application
 boot: auto
@@ -15,6 +15,7 @@ devices:
   - /dev/hidraw*:/dev/hidraw*:rwm
   - /dev/bus/usb:/dev/bus/usb:rwm
 privileged:
-  - true  # Для полного USB/HID доступа в HA OS
+  - SYS_RAWIO
+  - SYS_ADMIN
 homeassistant_api: true
 schema: {}  # Нет пользовательского конфига
