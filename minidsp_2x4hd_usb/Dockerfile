@@ -1,10 +1,10 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-addon-base:latest
+ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:latest
 FROM ${BUILD_FROM}
 
 # Рабочая директория
 WORKDIR /app
 
-# Устанавливаем системные зависимости
+# Системные зависимости и build deps
 RUN apk add --no-cache \
         python3 \
         py3-virtualenv \
@@ -15,19 +15,23 @@ RUN apk add --no-cache \
         musl-dev \
         linux-headers
 
-# Создаём виртуальное окружение
+# Создаём виртуальное окружение и ставим hidapi
 RUN python3 -m venv /venv \
     && /venv/bin/pip install --upgrade pip \
     && /venv/bin/pip install --no-cache-dir hidapi
 
-# Удаляем сборочные пакеты
+# Убираем build deps
 RUN apk del .build-deps
 
-# Копируем всё содержимое аддона
-COPY . /app/
+# Копируем файлы аддона
+COPY minidsp_2x4hd_usb/ /app/
+COPY minidsp_2x4hd_usb/services.d/ /etc/services.d/
 
-# Копируем службу s6
-COPY services.d/ /etc/services.d/
+# Делаем run исполняемым
+RUN chmod +x /etc/services.d/minidsp/run
 
-# Даем права на run
-RUN chmod +x /etc/services.d/minidsp
+# Экспортируем venv в PATH
+ENV PATH="/venv/bin:$PATH"
+
+# CMD для s6-overlay (PID 1)
+CMD [ "/init" ]
