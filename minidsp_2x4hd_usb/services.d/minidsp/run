@@ -1,4 +1,4 @@
 #!/usr/bin/with-contenv bash
+set -e
 
-# Запуск основного скрипта
-exec /venv/bin/python /app/minidsp_status.py
+exec python3 /app/minidsp_status.py
