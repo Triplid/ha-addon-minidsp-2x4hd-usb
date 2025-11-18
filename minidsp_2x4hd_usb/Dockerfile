@@ -1,6 +1,7 @@
 ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:latest
 FROM ${BUILD_FROM} AS builder
 
+# Пакеты для сборки Python hidapi
 RUN apk add --no-cache --virtual .build-deps \
     gcc \
     musl-dev \
@@ -8,16 +9,17 @@ RUN apk add --no-cache --virtual .build-deps \
     python3 \
     py3-pip \
     libusb-dev \
-    hidapi-libusb
+    eudev-dev
 
-RUN pip install --no-cache-dir cython hidapi
+# Сборка Python hidapi (сам компилирует C backend hidraw)
+RUN pip install --no-cache-dir hidapi
 
 FROM ${BUILD_FROM}
 
 RUN apk add --no-cache \
     python3 \
-    hidapi-libusb \
-    libusb
+    libusb \
+    eudev
 
 COPY --from=builder /usr/local/lib/python3.*/site-packages /usr/local/lib/python3.*/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
