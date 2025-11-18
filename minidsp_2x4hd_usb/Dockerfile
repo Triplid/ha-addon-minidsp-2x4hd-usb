@@ -1,12 +1,27 @@
-FROM ghcr.io/home-assistant/aarch64-base:latest
+name: "MiniDSP 2x4 HD USB (Presets & Source)"
+description: "USB control for miniDSP 2x4 HD: read presets and source via HID"
+version: "1.0.0"
+slug: minidsp_2x4hd_usb
+url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
 
-WORKDIR /app
+arch:
+  - aarch64
+  - armv7
+  - amd64
 
-RUN apk add --no-cache python3 py3-pip libusb eudev \
-    && apk add --no-cache --virtual .build-deps gcc musl-dev linux-headers \
-    && pip install --break-system-packages hidapi \
-    && apk del .build-deps
+startup: application
+boot: auto
 
-COPY . /app/
+map:
+  - share:rw
 
-RUN chmod +x services.d/minidsp/run
+devices:
+  - /dev/hidraw*
+  - /dev/bus/usb
+
+privileged:
+  - SYS_RAWIO
+  - SYS_ADMIN
+
+homeassistant_api: true
+schema: {}
