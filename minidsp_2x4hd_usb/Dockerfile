@@ -1,28 +1,25 @@
 ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:latest
 FROM ${BUILD_FROM} AS builder
 
-# Пакеты для сборки Python hidapi
+# Сборка пакетов
 RUN apk add --no-cache --virtual .build-deps \
-    gcc \
-    musl-dev \
-    linux-headers \
-    python3 \
-    py3-pip \
-    libusb-dev \
-    eudev-dev
+    gcc musl-dev linux-headers python3 py3-pip libusb-dev eudev-dev
 
-# Сборка Python hidapi (сам компилирует C backend hidraw)
+# Создаем виртуальное окружение
+RUN python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
+
+# Устанавливаем hidapi в venv
 RUN pip install --no-cache-dir hidapi
 
 FROM ${BUILD_FROM}
 
-RUN apk add --no-cache \
-    python3 \
-    libusb \
-    eudev
+# Runtime библиотеки
+RUN apk add --no-cache python3 libusb eudev
 
-COPY --from=builder /usr/local/lib/python3.*/site-packages /usr/local/lib/python3.*/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
+# Копируем venv
+COPY --from=builder /venv /venv
+ENV PATH="/venv/bin:$PATH"
 
 WORKDIR /app
 COPY run.sh minidsp_status.py ./
