@@ -1,34 +1,24 @@
 # Базовый образ Home Assistant для aarch64
-ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:latest
-FROM ${BUILD_FROM}
+FROM ghcr.io/home-assistant/aarch64-base:latest
 
-# Метаданные
-ARG BUILD_DATE
-ARG BUILD_VERSION
-LABEL maintainer="Твой Email или GitHub" \
-      org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.version=$BUILD_VERSION \
-      org.label-schema.vcs-url="https://github.com/твой_репозиторий" \
-      org.label-schema.vcs-ref=$BUILD_VERSION \
-      org.label-schema.license="MIT" \
-      org.label-schema.name="MiniDSP 2x4HD USB"
-
-# Установка зависимостей Python и USB
+# Установка зависимостей
 RUN apk add --no-cache \
     python3 \
-    py3-hidapi \
+    py3-pip \
     libusb \
-    eudev
+    eudev \
+    eudev-dev \
+    gcc \
+    musl-dev \
+    linux-headers
 
-# Копируем файлы аддона
-WORKDIR /usr/src/app
-COPY run.sh .
+# Копируем скрипт запуска
+COPY run.sh /usr/src/app/run.sh
+RUN chmod a+x /usr/src/app/run.sh
 
-# Скрипт запуска делаем исполняемым
-RUN chmod a+x run.sh
+# Установка Python библиотеки hidapi в виртуальной среде
+RUN python3 -m venv /usr/src/app/venv && \
+    /usr/src/app/venv/bin/pip install --no-cache-dir hidapi
 
-# Порт (если нужен)
-EXPOSE 5000
-
-# Точка входа
-CMD [ "/usr/src/app/run.sh" ]
+# CMD обязательно /init для s6-overlay
+CMD ["/init"]
