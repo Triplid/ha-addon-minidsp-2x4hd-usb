@@ -1,5 +1,7 @@
 #!/usr/bin/with-contenv bash
-# Скрипт запускается под s6-overlay
 
-# Путь к Python скрипту
-python3 /app/minidsp_status.py
+# активируем venv
+. /venv/bin/activate
+
+# запускаем основной скрипт (exec важно для корректного PID внутри s6)
+exec python /app/minidsp_status.py
