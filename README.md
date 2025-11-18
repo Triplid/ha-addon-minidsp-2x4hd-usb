@@ -1,15 +1,6 @@
-# MiniDSP 2x4HD USB Home Assistant Add-on
+# MiniDSP 2x4 HD USB Add-on for Home Assistant
 
-Этот аддон позволяет управлять MiniDSP 2x4HD по USB через Home Assistant.
+This add-on allows USB control of miniDSP 2x4 HD presets and source selection in HA Green.
 
-## Особенности
-
-- Работа через hidapi без ручной сборки C-библиотек
-- Поддержка aarch64 и других архитектур
-- Полностью совместим с Home Assistant Supervisor
-
-## Установка
-
-1. Клонируйте репозиторий в папку `addons`:
-```bash
-git clone https://github.com/твой_репозиторий minidsp_2x4hd_usb
+## Installation
+Add this repository in HA: https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb
