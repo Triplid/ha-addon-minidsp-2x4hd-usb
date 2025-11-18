@@ -1,31 +1,15 @@
-# Stage 1: base
-FROM ghcr.io/home-assistant/aarch64-base:latest
+ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:3.22
+FROM ${BUILD_FROM}
 
-# Установка зависимостей для сборки
+# Runtime пакеты (hidapi из apk для aarch64)
 RUN apk add --no-cache \
     python3 \
-    py3-pip \
-    libusb \
-    eudev \
-    gcc \
-    musl-dev \
-    linux-headers \
-    libusb-dev \
-    eudev-dev \
-    git \
-    && python3 -m venv /venv \
-    && /venv/bin/pip install --upgrade pip \
-    && /venv/bin/pip install hidapi flask
+    hidapi \
+    libusb
 
-# Копируем код приложения
-COPY app /app
+# Рабочая директория
 WORKDIR /app
+COPY run.sh minidsp_status.py ./
+RUN chmod +x run.sh minidsp_status.py
 
-# Указываем окружение venv
-ENV PATH="/venv/bin:$PATH"
-
-# Экспонируем порт для REST
-EXPOSE 5000
-
-# Запуск приложения
-CMD ["python", "main.py"]
+CMD ["./run.sh"]
