@@ -12,14 +12,15 @@ RUN apk add --no-cache \
     musl-dev \
     linux-headers
 
-# Копируем скрипт запуска
-COPY run.sh /usr/src/app/run.sh
-RUN chmod a+x /usr/src/app/run.sh
+# Копируем скрипт
+COPY minidsp_status.py /usr/src/app/minidsp_status.py
 
-# Установка hidapi в виртуальной среде
+# Создаём виртуальное окружение для Python и ставим hidapi
 RUN python3 -m venv /usr/src/app/venv && \
     /usr/src/app/venv/bin/pip install --no-cache-dir hidapi
 
-# Устанавливаем s6-overlay как PID 1
-# В HA add-on CMD должен быть только /init
-CMD [ "/init" ]
+# Копируем s6 сервис
+COPY services.d/ /etc/services.d/
+
+# Правильный CMD для s6
+CMD ["/init"]
