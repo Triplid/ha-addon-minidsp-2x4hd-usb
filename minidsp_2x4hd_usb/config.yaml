@@ -2,10 +2,11 @@ name: "MiniDSP 2x4 HD USB (Presets & Source)"
 description: "USB control for miniDSP 2x4 HD: read presets and source via HID"
 version: "1.0.0"
 slug: minidsp_2x4hd_usb
-url: "https://github.com/markubiak/python3-minidsp"
+url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
 arch:
-  - aarch64  # Основной для HA Green
-  - amd64
+  - aarch64  # Основной для HA Green (ARM64)
+  - armv7l   # Дополнительно для старых ARM
+  - amd64    # Для x86
 startup: application
 boot: auto
 map:
@@ -13,4 +14,7 @@ map:
 devices:
   - /dev/hidraw*:/dev/hidraw*:rwm
   - /dev/bus/usb:/dev/bus/usb:rwm
-homeassistant_api: true  # Для интеграции с HA
+privileged:
+  - true  # Для полного USB/HID доступа в HA OS
+homeassistant_api: true
+schema: {}  # Нет пользовательского конфига
