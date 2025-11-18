@@ -1,35 +1,12 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:latest
-FROM ${BUILD_FROM}
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:16.2.2
+FROM $BUILD_FROM
 
-# Рабочая директория
-WORKDIR /app
+RUN apk add --no-cache python3 py3-pip py3-pyusb
 
-# Устанавливаем Python + зависимости + virtualenv
-RUN apk add --no-cache \
-        python3 \
-        py3-virtualenv \
-        libusb \
-        eudev \
-    && apk add --no-cache --virtual .build-deps \
-        gcc \
-        musl-dev \
-        linux-headers \
-    && python3 -m venv /venv \
-    && /venv/bin/pip install --upgrade pip \
-    && /venv/bin/pip install hidapi \
-    && apk del .build-deps
+COPY minidsp_2x4hd_usb/ /usr/local/share/minidsp_2x4hd_usb/
 
-# Копируем директорию аддона
-COPY minidsp_2x4hd_usb/ /app/
+RUN chmod +x /usr/local/share/minidsp_2x4hd_usb/services.d/minidsp/run && \
+    chmod +x /usr/local/share/minidsp_2x4hd_usb/services.d/minidsp/finish && \
+    chmod +x /usr/local/share/minidsp_2x4hd_usb/minidsp-usb.py
 
-# Страхуемся: делаем run исполняемым
-RUN chmod +x /app/services.d/minidsp/run
-
-# Разрешаем s6 запускать сервисы
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
-
-# Указываем правильный сервисный каталог
-COPY minidsp_2x4hd_usb/services.d/ /etc/services.d/
-
-# Запускаем s6
-CMD [ "/init" ]
+CMD [ "/usr/bin/s6-svscan", "/usr/local/share/minidsp_2x4hd_usb/services.d" ]
