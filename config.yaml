@@ -1,19 +1,8 @@
-name: "MiniDSP 2x4 HD USB (Presets & Source)"
-slug: "minidsp_2x4hd_usb"
+name: "MiniDSP 2x4HD USB"
+slug: "minidsp-2x4hd-usb"
 description: "USB control for miniDSP 2x4 HD: read presets and source via HID"
 version: "1.0.0"
-url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
 arch:
-  - aarch64
-  - armv7
   - amd64
 startup: "application"
 boot: "auto"
-map:
-  - share:rw
-devices:
-  - /dev/hidraw*
-  - /dev/bus/usb
-privileged: true
-homeassistant_api: true
-schema: {}
