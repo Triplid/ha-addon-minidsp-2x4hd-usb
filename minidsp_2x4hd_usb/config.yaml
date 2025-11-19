@@ -1,7 +1,7 @@
 name: "MiniDSP 2x4 HD USB"
 slug: minidsp_2x4hd_usb
 description: "USB control for miniDSP 2x4 HD: read presets and source via HID"
-version: "1.0.0"
+version: "1.1.0"
 url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
 arch:
   - aarch64
@@ -9,6 +9,7 @@ arch:
   - amd64
 startup: "application"
 boot: "auto"
+ports: {}
 map:
   - share:rw
 devices:
@@ -16,5 +17,12 @@ devices:
   - /dev/bus/usb
 privileged: true
 homeassistant_api: true
-schema: {}
-options: {}
+schema:
+  update_interval:
+    name: "Update Interval"
+    description: "Interval in seconds between status updates"
+    type: "integer"
+    default: 10
+    required: true
+options:
+  update_interval: 10
