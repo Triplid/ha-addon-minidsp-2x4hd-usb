@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+import hid
+import json
+import time
+import sys
+
+VID = 0x2752  # miniDSP
+PID = 0x0011  # 2x4 HD
+
+def get_status():
+    try:
+        with hid.Device(VID, PID) as h:
+            master_report = h.get_feature_report(0x81, 8)
+            preset = int(master_report[3]) + 1 if len(master_report) > 3 else 0
+
+            source_report = h.get_feature_report(0x82, 8)
+            source_num = int(source_report[1]) if len(source_report) > 1 else 0
+            source = "analog" if source_num == 0 else "digital"
+
+        return {"preset": preset, "source": source}
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return {"preset": 0, "source": "error"}
+
+if __name__ == "__main__":
+    while True:
+        status = get_status()
+        try:
+            with open('/share/minidsp_status.json', 'w') as f:
+                json.dump(status, f, indent=2)
+        except Exception as e:
+            print(f"Cannot write to /share: {e}", file=sys.stderr)
+        print(f"Status: {status}")
+        time.sleep(10)
