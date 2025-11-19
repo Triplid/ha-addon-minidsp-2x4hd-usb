@@ -1,5 +1,5 @@
 name: "MiniDSP 2x4 HD USB (Presets & Source)"
-slug: minidsp_2x4hd_usb
+slug: "minidsp_2x4hd_usb"
 description: "USB control for miniDSP 2x4 HD: read presets and source via HID"
 version: "1.0.0"
 url: "https://github.com/Triplid/ha-addon-minidsp-2x4hd-usb"
