@@ -10,11 +10,9 @@ PID = 0x0011  # 2x4 HD
 def get_status():
     try:
         with hid.Device(VID, PID) as h:
-            # Report 0x81: Master status (preset в байте 3: 0-3 -> 1-4)
             master_report = h.get_feature_report(0x81, 8)
             preset = int(master_report[3]) + 1 if len(master_report) > 3 else 0
 
-            # Report 0x82: Input source (байт 1: 0=analog, 1=digital)
             source_report = h.get_feature_report(0x82, 8)
             source_num = int(source_report[1]) if len(source_report) > 1 else 0
             source = "analog" if source_num == 0 else "digital"
