@@ -1,6 +1,6 @@
-name: "Название аддона"
-slug: "slug_аддона"
-description: "Описание"
+name: "MiniDSP 2x4HD USB"
+slug: "ha-addon-minidsp-2x4hd-usb"
+description: "USB control for miniDSP 2x4 HD: read presets and source via HID"
 version: "1.0.0"
 arch:
   - amd64
@@ -8,4 +8,3 @@ arch:
   - aarch64
 startup: "application"
 boot: "auto"
-homeassistant_api: true  # если нужен HA API
